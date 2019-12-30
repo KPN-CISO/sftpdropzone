@@ -1,20 +1,16 @@
 # sftpdropzone
 
-## Example script for the setup:
-```
+## Secured account preparation:
+Specific configured home-dir for exclusive sftp dropzone user, nologin shell, specific functional primary group, exclusive sftp-only rights as secondary right. The SSH will be chrooted here.
+
+```bash
 # Group for the dropzone user.
 groupadd dropzone1
-```
 
-```
 # Group ownership pushes the exclusive right to only allow for sftp for the
 # associated user user.
 groupadd sftponly
-```
 
-## Secured account:
-Specific configured home-dir for exclusive sftp dropzone user, nologin shell, specific functional primary group, exclusive sftp-only rights as secondary right. The SSH will be chrooted here.
-```bash
 useradd \
     --create-home \
     --home-dir /home/sftponlydropzone1 \
