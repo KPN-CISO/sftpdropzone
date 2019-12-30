@@ -1,5 +1,27 @@
 # sftpdropzone
 
+Create a secure dropzone with SFTP. It requires an addition to the host's SSH daemon configuration, a specific configuration to the home-directory and rights with basic Unix added to functional accounts.
+
+## SSH daemon configuration
+Explination of the config:
+- Match to the primary or secondary group of a user.
+- Chroot to /home/user-account
+- No X11 forwarding to the client
+- No Tcp forwarding, forward and remote forwarding is disabled.
+- No TTY, which results in no shell binding.
+- No tunneling.
+- Force exclusive use of the internal SFTP facility.
+
+```
+Match group sftponly
+     ChrootDirectory /home/%u
+     X11Forwarding no
+     AllowTcpForwarding no
+     PermitTTY no
+     PermitTunnel no
+     ForceCommand internal-sftp
+```
+
 ## Secured account preparation:
 Specific configured home-dir for exclusive sftp dropzone user, nologin shell, specific functional primary group, exclusive sftp-only rights as secondary right. The SSH will be chrooted here.
 
@@ -44,25 +66,4 @@ chmod 750 /home/sftpreadinguser
 
 passwd sftponlydropzone1
 passwd sftpreadinguser
-```
-
-
-## SSH daemon configuration
-Explination of the config:
-- Match to the primary or secondary group of a user.
-- Chroot to /home/user-account
-- No X11 forwarding to the client
-- No Tcp forwarding, forward and remote forwarding is disabled.
-- No TTY, which results in no shell binding.
-- No tunneling.
-- Force exclusive use of the internal SFTP facility.
-
-```
-Match group sftponly
-     ChrootDirectory /home/%u
-     X11Forwarding no
-     AllowTcpForwarding no
-     PermitTTY no
-     PermitTunnel no
-     ForceCommand internal-sftp
 ```
