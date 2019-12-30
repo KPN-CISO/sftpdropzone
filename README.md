@@ -18,6 +18,7 @@ useradd \
     --gid dropzone1 \
     --groups sftponly \
     sftponlydropzone1
+```
 
 ## Secure home-dir:
 root owned, due to chroot, group matching primary group associated to this dropzone and stripped from others to read. Only a user with the proper dropzone1 group as a primary or secondary group can access the dropzone.
