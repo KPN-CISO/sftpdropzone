@@ -1,4 +1,4 @@
-# sftpdropzone
+# SFTP based dropzone
 
 Create a secure dropzone with SFTP. It requires an addition to the host's SSH daemon configuration, a specific configuration to the home-directory and rights with basic Unix added to functional accounts.
 
