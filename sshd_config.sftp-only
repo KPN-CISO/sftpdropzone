@@ -1,0 +1,87 @@
+## Add this to the bottom of the /etc/ssh/sshd_config file
+## 1. Create a user with the following details for the best effect
+## 1.1. a dedicated username. Consider the resulting UID range.
+## 1.2. a dedicated primary group for the user to write the files with.
+##      Consider that you need to pull the files with a specific group. So this
+##      group will become a secondary group for the account that reads from
+##      this dropzone.
+## 1.3. a dedicated secondary group which indicates the sftp-only rights to
+##      that user.
+## 2. Create a new home-directory, and consider the following:
+## 2.1. User perms: due to the chroot, must be writable by the root user.
+## 2.2. Group perms: there are multiple options here.
+## 2.2.1 Ownership on the directory group rights could be set to root:
+##       With the rights set to root, no reading is possible by other users
+##       unless the Other perms are open for all users on the system.
+##       Note: Writing is also no possible for the sftp user. Make sure the
+##             user can get into the directory via the Other perms on the 
+##             home directory and make subdirectory with matching perms for
+##             the dedicated user. Consider the primary group to be shareable
+##             which is similar to 2.2.2.
+## 2.2.2 Ownership on the directory group rights could be set to a dedicated
+##       group equal to the primary group of the sftp user. When another user 
+##       needs to read the files written, the reading user needs to add the
+##       primary group of the sftp user to its secondary groups, effectivly 
+##       gaining access to the dropzone. In this case the Other group perms 
+##       can be nullified.
+
+
+## Example script for the setup:
+#    # Group for the dropzone user.
+#    groupadd dropzone1
+#
+#    # Group ownership pushes the exclusive right to only allow for sftp for the
+#    # associated user user.
+#    groupadd sftponly
+#
+#    # Secured account: Specific configured home-dir for exclusive sftp dropzone
+#    # user, nologin shell, specific functional primary group, exclusive sftp-only
+#    # rights as secondary right. The SSH will be chrooted here.
+#    useradd \
+#        --create-home \
+#        --home-dir /home/sftponlydropzone1 \
+#        --shell /usr/sbin/nologin \
+#        --gid dropzone1 \
+#        --groups sftponly \
+#        sftponlydropzone1
+#
+#    # Secure home-dir: root owned, due to chroot, group matching primary group
+#    # associated to this dropzone and stripped from others to read. Only a user
+#    # with the proper dropzone1 group as a primary or secondary group can access
+#    # the dropzone..
+#    chown root:dropzone1 /home/sftponlydropzone1
+#    chmod 770 /home/sftponlydropzone1
+#
+#    # A reader/write user account with a dropzone1 secondary group associated to
+#    # it. This authorizes the user to access the dropzones using the the dropzone1
+#    # as primary group.
+#    useradd \
+#        --create-home \
+#        --shell /bin/bash \
+#        --groups dropzone1 \
+#        sftpreadinguser
+#
+#    # Avoid data leakages via the Other perms on the reader directory.
+#    chmod 750 /home/sftpreadinguser
+#
+#    Set account passwords
+#    passwd sftponlydropzone1
+#    passwd sftpreadinguser
+
+
+## Explination of the config:
+## - Match to the primary or secondary group of a user.
+## - Chroot to /home/user-account
+## - No X11 forwarding to the client
+## - No Tcp forwarding, forward and remote forwarding is disabled.
+## - No TTY, which results in no shell binding.
+## - No tunneling.
+## - Force exclusive use of the internal SFTP facility.
+Match group sftponly
+     ChrootDirectory /home/%u
+     X11Forwarding no
+     AllowTcpForwarding no
+     PermitTTY no
+     PermitTunnel no
+     ForceCommand internal-sftp
+
