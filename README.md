@@ -2,7 +2,8 @@
 
 Create a secure dropzone with SFTP. It requires an addition to the host's SSH daemon configuration, a specific configuration to the home-directory and rights with basic Unix added to functional accounts.
 
-### Note: This example is created and tested on a clean Debian machine on a non-ACL activated file system using local storage. The expectation is that this setup will work on all POSIX compliant Unix systems and all known Linux distributions, independent of the Linux flavor. The SSH daemon used is OpenSSH 7.9p1-10+deb10u1 (native OpenSSH server on Debian 10).
+### Note:
+This example is created and tested on a clean Debian machine on a non-ACL activated file system using local storage. The expectation is that this setup will work on all POSIX compliant Unix systems and all known Linux distributions, independent of the Linux flavor. The SSH daemon used is OpenSSH 7.9p1-10+deb10u1 (native OpenSSH server on Debian 10).
 
 
 ## SSH daemon configuration
