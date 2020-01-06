@@ -19,9 +19,13 @@ useradd \
 # Secure home-dir: root owned, due to chroot, group matching primary group
 # associated to this dropzone and stripped from others to read. Only a user
 # with the proper dropzone1 group as a primary or secondary group can access
-# the dropzone..
+# the dropzone. Make a dedicated drop zone directory with sufficient write
+# perms.
 chown root:dropzone1 /home/sftponlydropzone1
-chmod 770 /home/sftponlydropzone1
+chmod 750 /home/sftponlydropzone1
+mkdir /home/sftponlydropzone1/drop
+chown root:dropzone1 /home/sftponlydropzone1/drop
+chmod 770 /home/sftponlydropzone1/drop
 
 # A reader/write user account with a dropzone1 secondary group associated to
 # it. This authorizes the user to access the dropzones using the the dropzone1

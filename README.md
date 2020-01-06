@@ -47,10 +47,13 @@ useradd \
 ```
 
 ## Secure home-dir:
-root owned, due to chroot, group matching primary group associated to this dropzone and stripped from others to read. Only a user with the proper dropzone1 group as a primary or secondary group can access the dropzone.
+root owned, due to chroot, group matching primary group associated to this dropzone and stripped from others to read. Only a user with the proper dropzone1 group as a primary or secondary group can access the dropzone. Make a dedicated drop zone directory with sufficient write perms.
 ```bash
 chown root:dropzone1 /home/sftponlydropzone1
-chmod 770 /home/sftponlydropzone1
+chmod 750 /home/sftponlydropzone1
+mkdir /home/sftponlydropzone1/drop
+chown root:dropzone1 /home/sftponlydropzone1/drop
+chmod 770 /home/sftponlydropzone1/drop
 ```
 
 ## Reader/writer account:
